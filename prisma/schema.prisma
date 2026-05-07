@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+// sensor location
+
+model SensorLocation{
+  id String @id // explicitly set 
+  city String
+  country String
+  latitude Float?
+  longitude Float?
+  lastUpdated DateTime @default(now())
+}
+
+//one location many readings 
+
+
+// telemetry data (high frequency pollution readings)
+
+model AirQualityReading {
+  id String @id @default(uuid())
+  locationId String
+  parameter String
+  value Float
+  unit String
+  measurementTime DateTime  // from reading when we got this data
+createAt DateTime @default(now()) // server will save this time 
+
+
+// indexing 
+@@index([locationId , measurementTime])
+}
