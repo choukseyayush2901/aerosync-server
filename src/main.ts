@@ -4,14 +4,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // CORS enable karna taaki React app ise access kar sake
-  app.enableCors({
-    origin: '*', // Abhi testing ke liye sabko allow kar rahe hain
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  });
+  // Vercel frontend ko block na kare, isliye CORS enable karna zaroori hai
+  app.enableCors();
 
-  // Backend ko port 3333 par chala rahe hain taaki 3000 frontend ke liye free rahe
-  await app.listen(process.env.PORT ?? 3333);
-  console.log('🚀 Backend is running on: http://localhost:3333');
+  // Render ka dynamic PORT use karo, warna default 3333.
+  // '0.0.0.0' lagana zaroori hai taaki external connections allow hon.
+  const port = process.env.PORT || 3333;
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`🚀 Server running on port ${port}`);
 }
 bootstrap();
